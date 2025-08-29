@@ -813,7 +813,7 @@ func getHostConfig(c *Controller, tunnel *inletsv1alpha1.Tunnel, service *corev1
 
 		host = provision.BasicHost{
 			Name:       tunnel.Name,
-			OS:         "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230516",
+			OS:         "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20250822",
 			Plan:       "t3.micro",
 			UserData:   base64.StdEncoding.EncodeToString([]byte(userData)),
 			Additional: additional,
