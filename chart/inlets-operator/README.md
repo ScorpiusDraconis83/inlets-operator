@@ -1,10 +1,8 @@
 # inlets-operator chart
 
-The easiest way to install the inlets-operator is with [arkade](https://get-arkade.dev), an open-source Kubernetes marketplace.
+The easiest way to install the inlets-operator is with [arkade](https://arkade.dev), an open-source Kubernetes marketplace, however if you'd like to use Helm, read on for examples you can adapt.
 
 See [inlets-operator reference documentation](https://docs.inlets.dev/#/tools/inlets-operator?id=inlets-operator-reference-documentation)
-
-If you would like to use Helm instead, read on.
 
 ## Pre-reqs
 
