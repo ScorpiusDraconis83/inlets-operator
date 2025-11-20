@@ -19,7 +19,7 @@ jobs:
 
     runs-on: actuated-8cpu-12gb
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
