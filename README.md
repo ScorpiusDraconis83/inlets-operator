@@ -153,21 +153,18 @@ Configuring ingress:
 
 # Provider Pricing
 
-The host [provisioning code](https://github.com/inlets/cloud-provision) used by the inlets-operator is shared with [inletsctl](https://github.com/inlets/inletsctl), both tools use the configuration in the grid below.
+The host [provisioning code](https://github.com/inlets/cloud-provision) used by the inlets-operator is shared with [inletsctl](https://github.com/inlets/inletsctl).
 
-These costs need to be treated as an estimate and will depend on your bandwidth usage and how many hosts you decide to create. You can at all times check your cloud provider's dashboard, API, or CLI to view your exit-nodes. The hosts provided have been chosen because they are the absolute lowest-cost option that the maintainers could find.
+Typically the code uses the smallest, and cheapest VM/instance type available which has a public and stable IPv4 address allocated to it.
 
-| Provider                                                           | Price per month | Price per hour |     OS image | CPU | Memory | Boot time |
-| ------------------------------------------------------------------ | --------------: | -------------: | -----------: | --: | -----: | --------: |
-| [Google Compute Engine](https://cloud.google.com/compute)          |      *  ~\$4.28 |       ~\$0.006 | Ubuntu 22.04 | 1 | 614MB | ~3-15s |
-| [Digital Ocean](https://www.digitalocean.com/pricing/#Compute)     |             \$5 |      ~\$0.0068 | Ubuntu 22.04 |   1 |  1GB   | ~20-30s  |
-| [Scaleway](https://www.scaleway.com/en/pricing/#virtual-instances) |           5.84€ |         0.01€ | Ubuntu 22.04 |   2 |    2GB | 3-5m     |
-| [Amazon Elastic Computing 2](https://calculator.aws/#/createCalculator/EC2s) |           $3.796 |         $0.0052 | Ubuntu 20.04 |   1 |    1GB | 3-5m     |
-| [Linode](https://www.linode.com/pricing/) |           $5 |         $0.0075 | Ubuntu 22.04 |   1 |    1GB | ~10-30s    |
-| [Azure](https://azureprice.net/?cores=1,1&ram=0,11400) |           $4.53	 |         $0.0062 | Ubuntu 22.04 |   1 |    0.5GB | 2-4min    |
-| [Hetzner](https://www.hetzner.com/cloud) |           4.15€	 |         €0.007 | Ubuntu 22.04 |   1 |    2GB | ~5-10s    |
+Supported providers include i.e. AWS EC2, GCE, DigitalOcean, Hetzner Cloud, Vultr, Linode, etc.
 
-* The first f1-micro instance in a GCP Project (the default instance type for inlets-operator) is free for 720hrs(30 days) a month
+You can find provider-specific instructions here: [inlets-operator reference documentation](https://docs.inlets.dev/reference/inlets-operator/)
+
+
+Contributions to add VM providers are welcome. Generally speaking "serverless/container" platforms do not suit the needs of inlets tunnel servers.
+
+Inlets HTTP tunnel servers can also be run inside Kubernetes as Pods, exposed via Ingress.
 
 ## Video walk-through
 
