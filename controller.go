@@ -128,6 +128,11 @@ func NewController(
 			controller.enqueueTunnel(new)
 		},
 		UpdateFunc: func(old, new interface{}) {
+			newTunnel := new.(*inletsv1alpha1.Tunnel)
+			oldTunnel := old.(*inletsv1alpha1.Tunnel)
+			if newTunnel.ResourceVersion == oldTunnel.ResourceVersion {
+				return
+			}
 			controller.enqueueTunnel(new)
 		},
 		DeleteFunc: func(old interface{}) {
