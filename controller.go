@@ -131,7 +131,12 @@ func NewController(
 			newTunnel := new.(*inletsv1alpha1.Tunnel)
 			oldTunnel := old.(*inletsv1alpha1.Tunnel)
 			if newTunnel.ResourceVersion == oldTunnel.ResourceVersion {
-				return
+				// Periodic resync with no changes - only re-queue if
+				// still provisioning, since the resync loop polls the
+				// cloud provider for the host to become active.
+				if newTunnel.Status.HostStatus == provision.ActiveStatus {
+					return
+				}
 			}
 			controller.enqueueTunnel(new)
 		},
