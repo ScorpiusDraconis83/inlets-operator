@@ -131,10 +131,12 @@ func NewController(
 			newTunnel := new.(*inletsv1alpha1.Tunnel)
 			oldTunnel := old.(*inletsv1alpha1.Tunnel)
 			if newTunnel.ResourceVersion == oldTunnel.ResourceVersion {
-				// Periodic resync with no changes - only re-queue if
-				// still provisioning, since the resync loop polls the
-				// cloud provider for the host to become active.
-				if newTunnel.Status.HostStatus == provision.ActiveStatus {
+				// Periodic resync with no changes - only skip if the
+				// tunnel is fully provisioned: host is active and the
+				// client deployment has been created.
+				if newTunnel.Status.HostStatus == provision.ActiveStatus &&
+					newTunnel.Status.ClientDeploymentRef != nil &&
+					newTunnel.Status.ClientDeploymentRef.Name != "" {
 					return
 				}
 			}
@@ -770,8 +772,8 @@ func getHostConfig(c *Controller, tunnel *inletsv1alpha1.Tunnel, service *corev1
 	case "digitalocean":
 		host = provision.BasicHost{
 			Name:       tunnel.Name,
-			OS:         "ubuntu-22-04-x64",
-			Plan:       "s-1vcpu-1gb",
+			OS:         "debian-13-x64",
+			Plan:       "s-1vcpu-512mb-10gb",
 			Region:     c.infraConfig.Region,
 			UserData:   userData,
 			Additional: map[string]string{},
@@ -1087,17 +1089,18 @@ func (c *Controller) updateService(tunnel *inletsv1alpha1.Tunnel, ip string) err
 
 	// Update Spec.ExternalIPs
 	copy := res.DeepCopy()
-	if ip == "" {
-		ips := []string{}
-		for _, v := range copy.Spec.ExternalIPs {
-			if v != tunnel.Status.HostIP {
-				ips = append(ips, v)
-			}
+	// Remove any IPs previously set by this tunnel, preserving
+	// IPs assigned by other sources (e.g. svclb/klipper).
+	filtered := []string{}
+	for _, v := range copy.Spec.ExternalIPs {
+		if v != tunnel.Status.HostIP {
+			filtered = append(filtered, v)
 		}
-		copy.Spec.ExternalIPs = ips
-	} else {
-		copy.Spec.ExternalIPs = append(copy.Spec.ExternalIPs, ip)
 	}
+	if ip != "" {
+		filtered = append(filtered, ip)
+	}
+	copy.Spec.ExternalIPs = filtered
 
 	res, err = c.kubeclientset.CoreV1().
 		Services(tunnel.Namespace).
